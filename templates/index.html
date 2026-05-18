@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}NoorQalb — Find Your Ayah{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-bg-stars"></div>
+  <div class="hero-content">
+    <div class="hero-badge">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+    <h1 class="hero-title">How is Your <span class="highlight">Heart</span> Today?</h1>
+    <p class="hero-sub">Select your mood and receive a Quranic verse that speaks to your soul</p>
+  </div>
+</section>
+
+<section class="mood-section">
+  <h2 class="section-title">Select Your Mood</h2>
+  <div class="mood-grid">
+    <button class="mood-btn" data-mood="happy" onclick="selectMood(this)">
+      <span class="mood-emoji">😊</span>
+      <span class="mood-label">Happy</span>
+      <span class="mood-urdu">خوش</span>
+    </button>
+    <button class="mood-btn" data-mood="sad" onclick="selectMood(this)">
+      <span class="mood-emoji">😢</span>
+      <span class="mood-label">Sad</span>
+      <span class="mood-urdu">اداس</span>
+    </button>
+    <button class="mood-btn" data-mood="anxious" onclick="selectMood(this)">
+      <span class="mood-emoji">😰</span>
+      <span class="mood-label">Anxious</span>
+      <span class="mood-urdu">پریشان</span>
+    </button>
+    <button class="mood-btn" data-mood="grateful" onclick="selectMood(this)">
+      <span class="mood-emoji">🙏</span>
+      <span class="mood-label">Grateful</span>
+      <span class="mood-urdu">شکرگزار</span>
+    </button>
+    <button class="mood-btn" data-mood="lonely" onclick="selectMood(this)">
+      <span class="mood-emoji">😔</span>
+      <span class="mood-label">Lonely</span>
+      <span class="mood-urdu">تنہا</span>
+    </button>
+    <button class="mood-btn" data-mood="hopeful" onclick="selectMood(this)">
+      <span class="mood-emoji">🌟</span>
+      <span class="mood-label">Hopeful</span>
+      <span class="mood-urdu">امیدوار</span>
+    </button>
+    <button class="mood-btn" data-mood="angry" onclick="selectMood(this)">
+      <span class="mood-emoji">😠</span>
+      <span class="mood-label">Angry</span>
+      <span class="mood-urdu">غصہ</span>
+    </button>
+    <button class="mood-btn" data-mood="lost" onclick="selectMood(this)">
+      <span class="mood-emoji">😕</span>
+      <span class="mood-label">Lost</span>
+      <span class="mood-urdu">بھٹکا ہوا</span>
+    </button>
+  </div>
+</section>
+
+<section class="ayah-section" id="ayahSection" style="display:none;">
+  <div class="ayah-card" id="ayahCard">
+    <div class="ayah-glow"></div>
+    <div class="ayah-top-ornament">❧</div>
+    <div class="ayah-arabic" id="ayahArabic"></div>
+    <div class="ayah-divider">✦ ✦ ✦</div>
+    <div class="ayah-translation" id="ayahTranslation"></div>
+    <div class="ayah-surah" id="ayahSurah"></div>
+    <button class="btn-another" onclick="getAnotherAyah()">🔄 Another Verse</button>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  let currentMood = null;
+
+  function selectMood(btn) {
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    currentMood = btn.dataset.mood;
+    fetchAyah(currentMood);
+  }
+
+  function getAnotherAyah() {
+    if (currentMood) fetchAyah(currentMood);
+  }
+
+  function fetchAyah(mood) {
+    const section = document.getElementById('ayahSection');
+    const card = document.getElementById('ayahCard');
+    card.classList.remove('visible');
+
+    fetch('/get_ayah', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mood })
+    })
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('ayahArabic').textContent = data.arabic;
+      document.getElementById('ayahTranslation').textContent = data.translation;
+      document.getElementById('ayahSurah').textContent = '— ' + data.surah;
+      section.style.display = 'flex';
+      setTimeout(() => {
+        card.classList.add('visible');
+        section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    });
+  }
+</script>
+{% endblock %}

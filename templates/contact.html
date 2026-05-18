@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Contact Us — NoorQalb{% endblock %}
+{% block content %}
+<section class="auth-section">
+  <div class="auth-card contact-card">
+    <div class="auth-icon">✉</div>
+    <h2>Contact Us</h2>
+    <p class="auth-sub">We'd love to hear from you</p>
+    <p class="contact-email">📧 <a href="mailto:mubashir@khan.com">mubashir@khan.com</a></p>
+
+    {% if success %}
+    <div class="auth-success">✅ Your message has been sent! JazakAllah Khair.</div>
+    {% endif %}
+
+    <form method="POST" class="auth-form">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" name="name" placeholder="Your name" required />
+      </div>
+      <div class="form-group">
+        <label>Your Email</label>
+        <input type="email" name="email" placeholder="your@email.com" required />
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea name="message" rows="5" placeholder="Write your message..." required></textarea>
+      </div>
+      <button type="submit" class="btn-submit">Send Message →</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}NoorQalb — Quran for Your Heart{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- Durood Pak Splash Screen -->
+<div id="splashScreen" class="splash-screen">
+  <div class="splash-content">
+    <div class="splash-glow"></div>
+    <div class="splash-star-top">✦ ✦ ✦</div>
+    <div class="splash-arabic">اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ</div>
+    <div class="splash-translation">Allahumma Salli 'Ala Muhammadin Wa 'Ala Aali Muhammad</div>
+    <p class="splash-urdu">درود پاک پڑھ لیں — دل کو سکون ملے گا ❤️</p>
+    <div class="splash-dots">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</div>
+
+<nav class="navbar">
+  <div class="nav-logo">
+    <span class="logo-star">☽</span>
+    <span class="logo-text">NoorQalb</span>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Home</a></li>
+    <li><a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">Contact</a></li>
+    {% if session.get('user_name') %}
+      <li><span class="nav-user">👤 {{ session['user_name'] }}</span></li>
+      <li><a href="{{ url_for('logout') }}" class="btn-nav">Logout</a></li>
+    {% else %}
+      <li><a href="{{ url_for('login') }}" class="btn-nav">Login</a></li>
+      <li><a href="{{ url_for('signup') }}" class="btn-nav btn-primary">Sign Up</a></li>
+    {% endif %}
+  </ul>
+  <button class="nav-toggle" id="navToggle">☰</button>
+</nav>
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <span class="logo-star">☽</span>
+        <span class="logo-text">NoorQalb</span>
+      </div>
+      <p>Light for your heart, guidance for your soul.</p>
+    </div>
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('contact') }}">Contact Us</a>
+      {% if not session.get('user_name') %}
+      <a href="{{ url_for('login') }}">Login</a>
+      <a href="{{ url_for('signup') }}">Sign Up</a>
+      {% endif %}
+    </div>
+    <div class="footer-info">
+      <h4>Contact</h4>
+      <p>📧 <a href="mailto:mubashir@khan.com">mubashir@khan.com</a></p>
+      <p class="footer-durood">صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>Built for <strong>ICT Project</strong> &nbsp;|&nbsp; © 2024 NoorQalb &nbsp;|&nbsp; All rights reserved</p>
+  </div>
+</footer>
+
+<script>
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const splash = document.getElementById('splashScreen');
+      splash.classList.add('fade-out');
+      setTimeout(() => { splash.style.display = 'none'; }, 900);
+    }, 3200);
+  });
+
+  document.getElementById('navToggle').addEventListener('click', () => {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
